@@ -46,14 +46,21 @@ export default {
         var selectedCategroyTodolist = JSON.parse(localStorage.getItem(this.selectedCategory));
         selectedCategroyTodolist.push(todoItem);
         localStorage.setItem(this.selectedCategory, JSON.stringify(selectedCategroyTodolist));
-        this.todoItems.push(todoItem);
       }
+      else
+      {
+        var items = [];
+        items.push(todoItem);
+        localStorage.setItem(this.selectedCategory, JSON.stringify(items));
+      }
+
+      this.todoItems.push(todoItem);
     },
     clearAll() {
-      // 카테고리 제외하고 clear
-      var category = this.getCategory();
-      localStorage.removeItem(...category);
-      this.todoItems=[];
+      if(localStorage.getItem(this.selectedCategory) !== null) {
+        localStorage.removeItem(this.selectedCategory);
+        this.todoItems = [];
+      }
     },
     removeTodo(todoItem, index){
 
@@ -67,10 +74,15 @@ export default {
     changeCategory(index){
       this.selectedCategory = index;
 
-      if(localStorage.getItem(index) !== null) {
+      var items = JSON.parse(localStorage.getItem(index));
+      if(items !== null && items.length > 0) {
         var todolist = JSON.parse(localStorage.getItem(index));
         this.todoItems = [];
         this.todoItems.push(...todolist);
+      }
+      else
+      {
+        this.todoItems = [];
       }
     }
   },
